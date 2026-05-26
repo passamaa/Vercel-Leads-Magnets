@@ -2317,6 +2317,6 @@ var POPUP_DELAY_MS=8000;
 function openLeadPopup(){var o=document.getElementById('lead-popup');if(!o)return;o.classList.add('is-open');o.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
 function closeLeadPopup(){var o=document.getElementById('lead-popup');if(!o)return;o.classList.remove('is-open');o.setAttribute('aria-hidden','true');document.body.style.overflow='';try{localStorage.setItem(BREVO_CONFIG.LS_DISMISSED_KEY,String(Date.now()));}catch(e){}}
 function setupPopupListeners(){var cb=document.getElementById('popup-close');if(cb)cb.addEventListener('click',closeLeadPopup);var o=document.getElementById('lead-popup');if(o){o.addEventListener('click',function(e){if(e.target===o)closeLeadPopup();});}document.addEventListener('keydown',function(e){if(e.key==='Escape'){var o=document.getElementById('lead-popup');if(o&&o.classList.contains('is-open'))closeLeadPopup();}});}
-(function initPopup(){if(/[?&]testpopup/.test(window.location.search)){setTimeout(openLeadPopup,1000);setupPopupListeners();return;}try{if(localStorage.getItem(BREVO_CONFIG.LS_SUBMITTED_KEY)==='1')return;var d=parseInt(localStorage.getItem(BREVO_CONFIG.LS_DISMISSED_KEY)||'0',10);if(d&&(Date.now()-d)<86400000)return;}catch(e){}setTimeout(openLeadPopup,POPUP_DELAY_MS);setupPopupListeners();})();
+(function initPopup(){if(/[?&]testpopup/.test(window.location.search)){setTimeout(openLeadPopup,1000);setupPopupListeners();return;}setTimeout(openLeadPopup,POPUP_DELAY_MS);setupPopupListeners();})();
 </script>
 </body></html>
