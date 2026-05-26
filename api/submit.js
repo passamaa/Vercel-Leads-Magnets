@@ -84,7 +84,11 @@ export default async function handler(request) {
   }
 
   const config = LEAD_MAGNETS[leadMagnet];
-  const cleanPhone = (phone || '').replace(/[^\d+]/g, '');
+  const rawPhone = (phone || '').replace(/[^\d+]/g, '');
+  let cleanPhone = rawPhone;
+  if (rawPhone.match(/^0[0-9]/)) {
+    cleanPhone = '+33' + rawPhone.slice(1);
+  }
   const BREVO_API_KEY = process.env.BREVO_API_KEY;
   const PDF_BASE_URL = process.env.PDF_BASE_URL || 'https://lp.investissement-locatif.com';
 
