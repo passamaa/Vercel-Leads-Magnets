@@ -168,7 +168,13 @@ export default async function handler(request) {
         PDF_NAME: config.pdfDownloadName,
         PAGE_LABEL: config.pageLabel
       },
-      tags: ['lead-magnet', leadMagnet, 'welcome']
+      tags: ['lead-magnet', leadMagnet, 'welcome'],
+      attachment: [
+        {
+          url: `${PDF_BASE_URL}/${config.pdfFilename}`,
+          name: config.pdfDownloadName
+        }
+      ]
     };
 
     try {
