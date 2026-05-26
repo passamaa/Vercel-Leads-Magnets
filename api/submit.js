@@ -50,6 +50,9 @@ export default async function handler(request) {
     return json({ ok: true, service: 'brevo-proxy-il' });
   }
 
+  if (request.method === 'OPTIONS') {
+    return new Response(null, { status: 204, headers: { 'access-control-allow-origin': '*', 'access-control-allow-methods': 'POST, OPTIONS', 'access-control-allow-headers': 'content-type' }});
+  }
   if (request.method !== 'POST') {
     return json({ error: 'method_not_allowed' }, 405);
   }
@@ -190,7 +193,7 @@ export default async function handler(request) {
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { 'content-type': 'application/json; charset=utf-8' }
+    headers: { 'content-type': 'application/json; charset=utf-8', 'access-control-allow-origin': '*', 'access-control-allow-methods': 'POST, OPTIONS', 'access-control-allow-headers': 'content-type' }
   });
 }
 
