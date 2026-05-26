@@ -1,7 +1,1 @@
-{
-  "functions": {
-    "api/submit.js": {
-      "runtime": "edge"
-    }
-  }
-}
+{}
