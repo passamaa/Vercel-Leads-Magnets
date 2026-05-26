@@ -103,7 +103,7 @@ export default async function handler(request) {
     attributes: {
       PRENOM: firstname.trim(),
       NOM: (lastname || '').trim(),
-      SMS: cleanPhone || undefined,
+      
       SOURCE_LP: config.pageLabel,
       DATE_OPTIN: new Date().toISOString()
     },
