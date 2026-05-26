@@ -1934,7 +1934,7 @@ footer .brand-name { font-family: 'Fraunces', serif; font-weight: 600; font-size
 <div class="label">,  Guide PDF · offert , </div>
 <h4>Avant de partir, <em>obtenez le guide.</em></h4>
 <p class="form-intro">Laissez-moi vos coordonnées. Le guide PDF se télécharge immédiatement et mon équipe vous recontacte sous 24 h si vous souhaitez aller plus loin.</p>
-<form data-hubspot-form="inline" id="lead-form" onsubmit="return submitToHubSpot(event, this);">
+<form data-brevo-form="inline" id="lead-form" onsubmit="return submitToBrevo(event, this);">
 <div class="form-grid">
 <div class="form-field">
 <label for="firstname">Prénom</label>
@@ -1955,7 +1955,8 @@ footer .brand-name { font-family: 'Fraunces', serif; font-weight: 600; font-size
 </div>
 <button class="form-submit" type="submit">Obtenir le guide en PDF →</button>
 <p class="form-trust">RGPD · Vos données restent confidentielles · Guide 100% offert · Aucun engagement</p>
-</form>
+
+<input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0"></form>
 </div>
 <div class="proof-block">
 <div class="label">,  Preuves concrètes , </div>
@@ -2270,7 +2271,7 @@ document.querySelectorAll('section, .profile-card, .structure-letter, .lever-car
 <div class="label">,  Guide PDF · offert , </div>
 <h4 id="popup-title">Avant de partir, <em>obtenez le guide.</em></h4>
 <p class="form-intro">Laissez-moi vos coordonnées. Le guide PDF se télécharge immédiatement et mon équipe vous recontacte sous 24 h si vous souhaitez aller plus loin.</p>
-<form data-hubspot-form="popup" id="lead-form-popup" onsubmit="return submitToHubSpot(event, this);">
+<form data-brevo-form="popup" id="lead-form-popup" onsubmit="return submitToBrevo(event, this);">
 <div class="form-grid">
 <div class="form-field">
 <label for="popup-firstname">Prénom</label>
@@ -2292,252 +2293,30 @@ document.querySelectorAll('section, .profile-card, .structure-letter, .lever-car
 <button class="form-submit" type="submit">Obtenir le guide en PDF →</button>
 <p class="form-trust">RGPD · Vos données restent confidentielles · Guide 100% offert · Aucun engagement</p>
 <div aria-live="polite" class="form-feedback" id="popup-feedback" role="status"></div>
-</form>
+
+<input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0"></form>
 </div>
 </div>
 <!-- Script HubSpot embed v2 : utilisé uniquement pour poser le cookie hubspotutk
      (tracking lead). La soumission réelle passe par l'API Forms ci-dessous. -->
-<script charset="utf-8" src="//js-eu1.hsforms.net/forms/embed/v2.js" type="text/javascript"></script>
 <script>
-/* ============================================================
-   INTÉGRATION HUBSPOT — LIVE
-   Portal : 26936848 · Form : 49434f90-e4d2-43d4-ba2d-fc09a4b6a489
-   Datacenter : EU1
-   ============================================================ */
-const HUBSPOT_CONFIG = {
-  HUBSPOT_ENABLED: true,
-  PORTAL_ID: '26936848',
-  FORM_ID:   '49434f90-e4d2-43d4-ba2d-fc09a4b6a489',
-  PAGE_NAME: 'Methode STRUCTURE — Manuel Ravier',
-  PDF_URL:   'guide-structure.pdf'
+const BREVO_CONFIG = {
+  WORKER_ENDPOINT: '/api/submit',
+  LEAD_MAGNET: 'structure',
+  PAGE_NAME: 'Methode STRUCTURE - Manuel Ravier',
+  PDF_URL: 'guide-structure.pdf',
+  PDF_DOWNLOAD_NAME: 'La-Methode-STRUCTURE-Manuel-Ravier.pdf',
+  LS_SUBMITTED_KEY: 'il_lead_submitted_structure_v3',
+  LS_DISMISSED_KEY: 'il_popup_dismissed_structure_v3'
 };
-
-/* ----------------------------------------------------------
-   triggerPDFDownload — synchrone, robuste, jamais same-tab
-   - download="..." → téléchargement direct si le navigateur l'honore
-   - target="_blank" → si download est ignoré (Safari, file://), s'ouvre
-     en nouvel onglet (jamais dans l'onglet courant)
-   - Appelé dans le call stack du clic → aucun blocage navigateur
-   ---------------------------------------------------------- */
-function triggerPDFDownload() {
-  if (!HUBSPOT_CONFIG.PDF_URL) return;
-  var a = document.createElement('a');
-  a.href     = HUBSPOT_CONFIG.PDF_URL;
-  a.download = 'La-Methode-STRUCTURE-Manuel-Ravier.pdf';
-  a.target   = '_blank';
-  a.rel      = 'noopener';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-}
-
-/* ----------------------------------------------------------
-   submitToHubSpot — commun au formulaire inline et à la popup
-   ---------------------------------------------------------- */
-function submitToHubSpot(event, formEl) {
-  event.preventDefault();
-
-  const isPopup  = formEl.dataset.hubspotForm === 'popup';
-  const feedback = isPopup
-    ? document.getElementById('popup-feedback')
-    : ensureInlineFeedback(formEl);
-
-  feedback.className  = 'form-feedback';
-  feedback.textContent = 'Envoi en cours…';
-
-  const data = new FormData(formEl);
-
-  /* HubSpot rejette le payload si on envoie des champs vides — on filtre. */
-  const allFields = [
-    { name: 'firstname', value: (data.get('firstname') || '').trim() },
-    { name: 'lastname',  value: (data.get('lastname')  || '').trim() },
-    { name: 'email',     value: (data.get('email')     || '').trim() },
-    { name: 'phone',     value: (data.get('phone')     || '').trim() }
-  ];
-  const fields = allFields.filter(function (f) { return f.value !== ''; });
-
-  const hutk = getHubSpotCookie();
-  const context = {
-    pageUri:  window.location.href,
-    pageName: HUBSPOT_CONFIG.PAGE_NAME
-  };
-  /* N'inclure hutk QUE s'il a une valeur réelle.
-     HubSpot rejette le payload avec INVALID_HUTK si on envoie '' (chaîne vide).
-     Le cookie n'existe que si l'utilisateur a déjà chargé le script HubSpot
-     embed v2.js et accepté les cookies — sinon on omet le champ.            */
-  if (hutk) context.hutk = hutk;
-
-  const payload = {
-    fields:  fields,
-    context: context
-  };
-
-  /* ---- PDF déclenché dans le call stack du clic, avant tout async ---- */
-  triggerPDFDownload();
-
-  if (!HUBSPOT_CONFIG.HUBSPOT_ENABLED) {
-    console.info('[HubSpot dry-run] Payload qui aurait été envoyé :', payload);
-    showSuccess(feedback, isPopup ? closeLeadPopup : null);
-    return false;
-  }
-
-  const endpoint = 'https://api-eu1.hsforms.com/submissions/v3/integration/submit/'
-                 + HUBSPOT_CONFIG.PORTAL_ID + '/' + HUBSPOT_CONFIG.FORM_ID;
-
-  console.info('[HubSpot] POST →', endpoint);
-  console.info('[HubSpot] Payload :', JSON.stringify(payload, null, 2));
-
-  fetch(endpoint, {
-    method:  'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body:    JSON.stringify(payload)
-  })
-  .then(function (r) {
-    console.info('[HubSpot] Statut HTTP :', r.status, r.statusText);
-    return r.text().then(function (raw) {
-      var body;
-      try { body = JSON.parse(raw); } catch (e) { body = raw; }
-      console.info('[HubSpot] Réponse :', body);
-      if (!r.ok) throw { status: r.status, body: body };
-      return body;
-    });
-  })
-  .then(function (body) {
-    console.info('[HubSpot] ✓ Lead créé avec succès.');
-    showSuccess(feedback, isPopup ? closeLeadPopup : null);
-  })
-  .catch(function (err) {
-    console.error('[HubSpot] ✗ ÉCHEC :', err);
-    feedback.classList.add('is-error');
-
-    /* Affiche le détail de l'erreur HubSpot dans l'UI pour debug */
-    var msg = 'Erreur soumission';
-    if (err && err.body) {
-      if (typeof err.body === 'string') {
-        msg += ' : ' + err.body.substring(0, 200);
-      } else if (err.body.message) {
-        msg += ' : ' + err.body.message;
-        if (err.body.errors && err.body.errors.length) {
-          msg += ' — ' + err.body.errors.map(function (e) {
-            return (e.message || JSON.stringify(e));
-          }).join(' | ');
-        }
-      } else {
-        msg += ' : ' + JSON.stringify(err.body).substring(0, 200);
-      }
-    } else if (err && err.message) {
-      msg += ' : ' + err.message;
-    }
-    feedback.textContent = msg;
-  });
-
-  return false;
-}
-
-/* ----------------------------------------------------------
-   showSuccess — affiche la confirmation, ferme la popup si besoin
-   Le PDF est déjà téléchargé avant l'appel de cette fonction.
-   ---------------------------------------------------------- */
-function showSuccess(feedback, onComplete) {
-  feedback.classList.add('is-success');
-  feedback.textContent = 'Merci ! Votre guide est en téléchargement. Mon équipe vous recontacte sous 24 h.';
-  try { localStorage.setItem('il_lead_submitted_v2', '1'); } catch (e) {}
-  if (onComplete) setTimeout(onComplete, 1800);
-}
-
-function ensureInlineFeedback(formEl) {
-  let fb = formEl.querySelector('.form-feedback');
-  if (!fb) {
-    fb = document.createElement('div');
-    fb.className = 'form-feedback';
-    fb.setAttribute('role', 'status');
-    fb.setAttribute('aria-live', 'polite');
-    formEl.appendChild(fb);
-  }
-  return fb;
-}
-
-function getHubSpotCookie() {
-  const match = document.cookie.match(/(?:^|;\s*)hubspotutk=([^;]+)/);
-  return match ? match[1] : '';
-}
-
-/* ============================================================
-   POP-UP — déclenchement 8 s, cooldown 24 h, fermeture multi
-   ============================================================ */
-const POPUP_DELAY_MS = 8000;
-
-function openLeadPopup() {
-  const overlay = document.getElementById('lead-popup');
-  if (!overlay) return;
-  overlay.classList.add('is-open');
-  overlay.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeLeadPopup() {
-  const overlay = document.getElementById('lead-popup');
-  if (!overlay) return;
-  overlay.classList.remove('is-open');
-  overlay.setAttribute('aria-hidden', 'true');
-  document.body.style.overflow = '';
-  try { localStorage.setItem('il_popup_dismissed_v2', String(Date.now())); } catch (e) {}
-}
-
-function setupPopupListeners() {
-  var closeBtn = document.getElementById('popup-close');
-  if (closeBtn) closeBtn.addEventListener('click', closeLeadPopup);
-
-  var overlay = document.getElementById('lead-popup');
-  if (overlay) {
-    overlay.addEventListener('click', function (e) {
-      if (e.target === overlay) closeLeadPopup();
-    });
-  }
-
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') {
-      var o = document.getElementById('lead-popup');
-      if (o && o.classList.contains('is-open')) closeLeadPopup();
-    }
-  });
-}
-
-(function initPopup() {
-  /* MODE TEST GLOBAL — auto-clear du dismiss à chaque rechargement
-     Permet à Benjamin de voir la popup à chaque refresh sans avoir
-     à clear manuellement le localStorage dans DevTools.
-     ⚠️  À COMMENTER EN PROD pour réactiver le cooldown 24h.        */
-  try {
-    localStorage.removeItem('il_popup_dismissed_v2');
-    localStorage.removeItem('il_lead_submitted_v2');
-    console.info('[Popup] Mode test : localStorage nettoyé à chaque chargement.');
-  } catch (e) {}
-
-  /* Mode test alternatif : ?testpopup pour affichage immédiat (1s au lieu de 8s) */
-  if (/[?&]testpopup/.test(window.location.search)) {
-    console.info('[Popup] ?testpopup détecté — affichage dans 1s.');
-    setTimeout(openLeadPopup, 1000);
-    setupPopupListeners();
-    return;
-  }
-
-  /* Mode normal — déclenchement après 8 secondes */
-  try {
-    if (localStorage.getItem('il_lead_submitted_v2') === '1') {
-      console.info('[Popup] Masquée : formulaire déjà soumis.');
-      return;
-    }
-    var dismissed = parseInt(localStorage.getItem('il_popup_dismissed_v2') || '0', 10);
-    if (dismissed && (Date.now() - dismissed) < 24 * 60 * 60 * 1000) {
-      console.info('[Popup] Masquée : fermée il y a moins de 24h.');
-      return;
-    }
-  } catch (e) {}
-
-  console.info('[Popup] Déclenchement dans ' + POPUP_DELAY_MS / 1000 + 's.');
-  setTimeout(openLeadPopup, POPUP_DELAY_MS);
-  setupPopupListeners();
-})();
+function triggerPDFDownload(){if(!BREVO_CONFIG.PDF_URL)return;var a=document.createElement('a');a.href=BREVO_CONFIG.PDF_URL;a.download=BREVO_CONFIG.PDF_DOWNLOAD_NAME;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();document.body.removeChild(a);}
+function submitToBrevo(event,formEl){event.preventDefault();var isPopup=formEl.dataset.brevoForm==='popup';var feedback=isPopup?document.getElementById('popup-feedback'):ensureInlineFeedback(formEl);feedback.className='form-feedback';feedback.textContent='Envoi en cours...';var data=new FormData(formEl);var payload={firstname:(data.get('firstname')||'').trim(),lastname:(data.get('lastname')||'').trim(),email:(data.get('email')||'').trim().toLowerCase(),phone:(data.get('phone')||'').trim(),leadMagnet:BREVO_CONFIG.LEAD_MAGNET,pageUri:window.location.href,pageName:BREVO_CONFIG.PAGE_NAME,honeypot:(data.get('website')||'').trim()};triggerPDFDownload();fetch(BREVO_CONFIG.WORKER_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(r){return r.json().then(function(body){if(!r.ok)throw {status:r.status,body:body};return body;});}).then(function(){showSuccess(feedback,isPopup?closeLeadPopup:null);}).catch(function(err){feedback.classList.add('is-error');feedback.textContent='Une erreur est survenue. Veuillez reessayer.';});return false;}
+function showSuccess(f,cb){f.classList.add('is-success');f.textContent='Merci ! Votre guide est en telechargement. Vous allez recevoir un email de confirmation dans la minute.';try{localStorage.setItem(BREVO_CONFIG.LS_SUBMITTED_KEY,'1');}catch(e){}if(cb)setTimeout(cb,1800);}
+function ensureInlineFeedback(f){var fb=f.querySelector('.form-feedback');if(!fb){fb=document.createElement('div');fb.className='form-feedback';fb.setAttribute('role','status');fb.setAttribute('aria-live','polite');f.appendChild(fb);}return fb;}
+var POPUP_DELAY_MS=8000;
+function openLeadPopup(){var o=document.getElementById('lead-popup');if(!o)return;o.classList.add('is-open');o.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
+function closeLeadPopup(){var o=document.getElementById('lead-popup');if(!o)return;o.classList.remove('is-open');o.setAttribute('aria-hidden','true');document.body.style.overflow='';try{localStorage.setItem(BREVO_CONFIG.LS_DISMISSED_KEY,String(Date.now()));}catch(e){}}
+function setupPopupListeners(){var cb=document.getElementById('popup-close');if(cb)cb.addEventListener('click',closeLeadPopup);var o=document.getElementById('lead-popup');if(o){o.addEventListener('click',function(e){if(e.target===o)closeLeadPopup();});}document.addEventListener('keydown',function(e){if(e.key==='Escape'){var o=document.getElementById('lead-popup');if(o&&o.classList.contains('is-open'))closeLeadPopup();}});}
+(function initPopup(){if(/[?&]testpopup/.test(window.location.search)){setTimeout(openLeadPopup,1000);setupPopupListeners();return;}try{if(localStorage.getItem(BREVO_CONFIG.LS_SUBMITTED_KEY)==='1')return;var d=parseInt(localStorage.getItem(BREVO_CONFIG.LS_DISMISSED_KEY)||'0',10);if(d&&(Date.now()-d)<86400000)return;}catch(e){}setTimeout(openLeadPopup,POPUP_DELAY_MS);setupPopupListeners();})();
 </script>
 </body></html>
