@@ -1,7 +1,7 @@
 {
   "framework": null,
   "rewrites": [
-    { "source": "/structure", "destination": "/La_Methode_STRUCTURE_6.html" },
-    { "source": "/trust", "destination": "/La_Methode_TRUST_6.html" }
+    { "source": "/methode-structure", "destination": "/methode-structure.html" },
+    { "source": "/methode-trust", "destination": "/methode-trust.html" }
   ]
 }
