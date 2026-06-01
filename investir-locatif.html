@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Vous souhaitez investir dans du locatif ? | Investissement Locatif</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F6F1E8; --paper:#FFFFFF;
+    --ink:#1E3A2F; --ink-soft:#3F564C; --ink-mute:#8A938B;
+    --accent:#B06B3C; --accent-deep:#8C5128; --accent-soft:#C98A5E;
+    --line:#E6DECF; --line-strong:#D6CBB6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  body{min-height:100vh;display:flex;flex-direction:column}
+  .wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:32px 20px}
+  .card{width:100%;max-width:600px;background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:48px 44px;box-shadow:0 1px 0 var(--line-strong),0 24px 60px -32px rgba(30,58,47,.28)}
+  @media(max-width:560px){.card{padding:34px 22px}}
+
+  .brand{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:26px;display:flex;align-items:center;gap:10px}
+  .brand::after{content:"";flex:1;height:1px;background:var(--line)}
+  .brand strong{color:var(--accent);font-weight:500}
+
+  h1{font-family:'Fraunces',serif;font-weight:400;font-size:33px;line-height:1.16;letter-spacing:-.01em;margin-bottom:14px}
+  h1 em{font-style:italic;color:var(--accent)}
+  @media(max-width:560px){h1{font-size:27px}}
+  .intro{font-size:15px;line-height:1.62;color:var(--ink-soft);margin-bottom:30px;max-width:520px}
+  .intro b{color:var(--ink);font-weight:600}
+
+  form{display:block}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}}
+  .field{display:flex;flex-direction:column;margin-bottom:15px}
+  .field.full{grid-column:1 / -1}
+  label{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:7px}
+  label .req{color:var(--accent)}
+  input,select{appearance:none;-webkit-appearance:none;width:100%;padding:13px 15px;border:1px solid var(--line-strong);border-radius:2px;background:var(--bg);font-family:'IBM Plex Sans',sans-serif;font-size:14.5px;color:var(--ink);transition:border-color .15s,box-shadow .15s}
+  select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A938B' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 15px center;padding-right:38px;cursor:pointer}
+  input::placeholder{color:var(--ink-mute)}
+  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(176,107,60,.12)}
+
+  .submit{width:100%;margin-top:8px;padding:16px 20px;border:none;border-radius:2px;background:var(--accent);color:#fff;font-family:'IBM Plex Sans',sans-serif;font-size:15px;font-weight:600;letter-spacing:.01em;cursor:pointer;transition:background .15s,transform .05s}
+  .submit:hover{background:var(--accent-deep)}
+  .submit:active{transform:translateY(1px)}
+  .submit:disabled{opacity:.6;cursor:default}
+
+  .trust{margin-top:16px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;color:var(--ink-mute);text-align:center;line-height:1.7}
+  .skip{margin-top:22px;text-align:center}
+  .skip a{font-size:13px;color:var(--ink-mute);text-decoration:none;border-bottom:1px solid var(--line-strong);padding-bottom:1px}
+  .skip a:hover{color:var(--ink-soft)}
+
+  .err{display:none;margin-top:14px;padding:11px 14px;border-radius:2px;background:#FBEDE6;border:1px solid var(--accent-soft);color:var(--accent-deep);font-size:13px;line-height:1.5}
+
+  /* ===== Success state ===== */
+  .done{display:none;text-align:center;padding:8px 4px}
+  .done .check{width:56px;height:56px;margin:0 auto 22px;border-radius:50%;border:1.5px solid var(--accent);display:flex;align-items:center;justify-content:center}
+  .done .check svg{width:24px;height:24px}
+  .done h2{font-family:'Fraunces',serif;font-weight:400;font-size:27px;line-height:1.2;margin-bottom:14px}
+  .done h2 em{font-style:italic;color:var(--accent)}
+  .done p{font-size:15px;line-height:1.62;color:var(--ink-soft);max-width:440px;margin:0 auto 8px}
+  .done p b{color:var(--ink);font-weight:600}
+
+  footer{text-align:center;padding:20px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-mute)}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+
+      <!-- ====== FORM STATE ====== -->
+      <div id="form-state">
+        <div class="brand"><strong>Investissement Locatif</strong></div>
+        <h1>Vous souhaitez investir <em>dans du locatif ?</em></h1>
+        <p class="intro">Votre guide arrive dans votre boîte mail dans quelques minutes. En attendant, <b>aidez votre conseiller à préparer un projet à votre mesure</b> : 30 secondes, et nous saurons exactement quoi vous proposer.</p>
+
+        <form id="qualif-form" novalidate>
+          <div class="field full">
+            <label for="tel">Téléphone <span class="req">*</span></label>
+            <input type="tel" id="tel" name="tel" required placeholder="+33 6 XX XX XX XX" autocomplete="tel">
+          </div>
+
+          <div class="grid">
+            <div class="field">
+              <label for="budget">Budget total du projet <span class="req">*</span></label>
+              <input type="text" id="budget" name="budget" required placeholder="Ex : 250 000 €">
+            </div>
+
+            <div class="field">
+              <label for="apport">Apport disponible <span class="req">*</span></label>
+              <input type="text" id="apport" name="apport" required placeholder="Ex : 40 000 €">
+            </div>
+
+            <div class="field">
+              <label for="ville">Ville ou zone visée <span class="req">*</span></label>
+              <input type="text" id="ville" name="ville" required placeholder="Ex : Lyon, Bordeaux...">
+            </div>
+
+            <div class="field">
+              <label for="echeance">Quand souhaitez-vous investir <span class="req">*</span></label>
+              <input type="text" id="echeance" name="echeance" required placeholder="Ex : dans 6 mois">
+            </div>
+          </div>
+
+          <button type="submit" class="submit" id="submit-btn">Valider mon profil investisseur &rarr;</button>
+          <p class="trust">RGPD &middot; Données confidentielles &middot; Aucun engagement &middot; Utilisées uniquement par votre conseiller IL</p>
+          <div class="err" id="err"></div>
+        </form>
+
+        <div class="skip"><a href="#" id="skip-link">Je préfère recevoir mon guide sans remplir</a></div>
+      </div>
+
+      <!-- ====== SUCCESS STATE ====== -->
+      <div class="done" id="done-state">
+        <div class="check">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 12.5l5 5L20 6.5" stroke="#B06B3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h2>C'est noté, <em>merci.</em></h2>
+        <p>Votre <b>guide arrive dans votre boîte mail</b> dans quelques minutes.</p>
+        <p>Votre conseiller Investissement Locatif dispose désormais de tout le nécessaire pour vous proposer un projet calibré sur votre budget et votre échéance.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>Investissement Locatif &middot; 4 000 projets livrés &middot; 14 M€ de loyers annuels</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  // ============================================================
+  //  CONFIG — a remplacer par l'URL reelle de ton Worker Brevo
+  //  (le meme Worker que celui qui recoit le submit des popups)
+  // ============================================================
+  var QUALIFY_ENDPOINT = "https://il-leads.TON-SOUS-DOMAINE.workers.dev/qualify";
+
+  // --- Lecture des params passes par la popup (redirect) ---
+  // ?e = email en base64url, ?t = telephone, ?r = residence (etranger|france)
+  var p = new URLSearchParams(location.search);
+  function b64urlDecode(s){ try{ return decodeURIComponent(escape(atob(String(s).replace(/-/g,'+').replace(/_/g,'/')))); }catch(e){ return ""; } }
+  var LEAD_EMAIL = b64urlDecode(p.get("e") || "");
+  var LEAD_TEL   = p.get("t") || "";
+  var RESIDENCE  = p.get("r") || "etranger"; // page expat = etranger par defaut
+
+  if (LEAD_TEL) document.getElementById("tel").value = LEAD_TEL;
+
+  var form   = document.getElementById("qualif-form");
+  var btn    = document.getElementById("submit-btn");
+  var errBox = document.getElementById("err");
+  var formSt = document.getElementById("form-state");
+  var doneSt = document.getElementById("done-state");
+
+  function showErr(msg){ errBox.textContent = msg; errBox.style.display = "block"; }
+  function clearErr(){ errBox.style.display = "none"; }
+  function showDone(){ formSt.style.display = "none"; doneSt.style.display = "block"; window.scrollTo({top:0,behavior:"smooth"}); }
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    clearErr();
+
+    var payload = {
+      email:     LEAD_EMAIL,
+      residence: RESIDENCE,
+      tel:       document.getElementById("tel").value.trim(),
+      budget:    document.getElementById("budget").value,
+      apport:    document.getElementById("apport").value,
+      ville:     document.getElementById("ville").value,
+      echeance:  document.getElementById("echeance").value
+    };
+
+    if (!payload.budget || !payload.apport || !payload.ville || !payload.echeance) {
+      showErr("Merci de completer tous les champs."); return;
+    }
+    if (!payload.email) {
+      console.warn("[qualif] email manquant dans l'URL, enrichissement Brevo impossible");
+      showDone(); return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "Enregistrement...";
+
+    fetch(QUALIFY_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    })
+    .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(d){ return {ok:r.ok,d:d}; }); })
+    .then(function(res){ if(!res.ok){ console.error("[qualif] Worker error", res.d); } showDone(); })
+    .catch(function(err){ console.error("[qualif] fetch failed", err); showDone(); });
+  });
+
+  document.getElementById("skip-link").addEventListener("click", function(e){ e.preventDefault(); showDone(); });
+})();
+</script>
+</body>
+</html>
