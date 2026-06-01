@@ -43,6 +43,8 @@
   select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A938B' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 15px center;padding-right:38px;cursor:pointer}
   input::placeholder{color:var(--ink-mute)}
   input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(176,107,60,.12)}
+  input[readonly]{background:#EFE9DD;color:var(--ink-soft);cursor:default}
+  input[readonly]:focus{border-color:var(--line-strong);box-shadow:none}
 
   .submit{width:100%;margin-top:8px;padding:16px 20px;border:none;border-radius:2px;background:var(--accent);color:#fff;font-family:'IBM Plex Sans',sans-serif;font-size:15px;font-weight:600;letter-spacing:.01em;cursor:pointer;transition:background .15s,transform .05s}
   .submit:hover{background:var(--accent-deep)}
@@ -79,6 +81,11 @@
         <p class="intro">Votre guide arrive dans votre boîte mail dans quelques minutes. En attendant, <b>aidez votre conseiller à préparer un projet à votre mesure</b> : 30 secondes, et nous saurons exactement quoi vous proposer.</p>
 
         <form id="qualif-form" novalidate>
+          <div class="field full">
+            <label for="email">Votre email <span class="req">*</span></label>
+            <input type="email" id="email" name="email" readonly placeholder="votre@email.com" autocomplete="email">
+          </div>
+
           <div class="field full">
             <label for="tel">Téléphone <span class="req">*</span></label>
             <input type="tel" id="tel" name="tel" required placeholder="+33 6 XX XX XX XX" autocomplete="tel">
@@ -148,6 +155,9 @@
   var RESIDENCE  = p.get("r") || "etranger"; // page expat = etranger par defaut
 
   if (LEAD_TEL) document.getElementById("tel").value = LEAD_TEL;
+
+  // Préremplit l'email (lecture seule) pour confirmer le bon profil
+  if (LEAD_EMAIL) document.getElementById("email").value = LEAD_EMAIL;
 
   var form   = document.getElementById("qualif-form");
   var btn    = document.getElementById("submit-btn");
